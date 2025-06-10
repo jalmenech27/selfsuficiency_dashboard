@@ -5,7 +5,8 @@
 Un projecte de *Data Visualization* dins la pràctica final del Màster en Ciència de Dades (UOC).
 
 [![Streamlit](https://img.shields.io/badge/built%20with-Streamlit-fuchsia)](https://streamlit.io)  
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![License: CC0-1.0](https://img.shields.io/badge/license-CC0%201.0-lightgrey)](LICENSE)
+
 
 ---
 
@@ -37,7 +38,7 @@ selfsuficiency_dashboard/
 │   ├── 4_Emissions_CO2.py
 │   └── 5_Production.py
 │
-├── data/                   # CSV pre-processats (no versió LFS)
+├── data/
 │   ├── fao_QCL.csv
 │   ├── fao_FBS.csv
 │   ├── fao_ET.csv
@@ -58,11 +59,11 @@ selfsuficiency_dashboard/
 ## 🚀 Instal·lació ràpida
 
 ```bash
-git clone https://github.com/<usuari>/selfsuficiency_dashboard.git
+git clone https://github.com/jalmenech27/selfsuficiency_dashboard.git
 cd selfsuficiency_dashboard
 
 python -m venv venv
-source venv/bin/activate   # Windows: .env\Scriptsctivate
+source venv/bin/activate
 
 pip install -r requirements.txt
 
@@ -80,28 +81,18 @@ streamlit run app.py
 La pàgina inicial mostra els KPI globals i la navegació lateral:
 
 1. **SSR** – Autosuficiència alimentària  
-2. **Export / Import** – Comerç exterior  
-3. **Gender** – Participació femenina  
-4. **Emissions CO₂** – Intensitat emissiva  
+2. **Export / Import** – Dades de comerç (exportacions i importacions)  
+3. **Gender** – Participació femenina a l'agricultura
+4. **Emissions CO₂** – Intensitat emissions   
 5. **Production** – Tendències de producció  
-
----
-
-## ⚙️ Configuració opcional
-
-| Variable d’entorn | Propòsit | Exemple |
-|-------------------|----------|---------|
-| `MAPBOX_TOKEN`    | Tiles d’alta resolució als mapes Plotly | `pk.eyJ1IjoibWFwYm94dXNlciIsImEiOiJ...` |
-
-Exporter: `st.download_button` et permet baixar qualsevol subset filtrat a CSV.
 
 ---
 
 ## 📈 Metodologia
 
-1. **Càrrega** de dades bulk (FAOSTAT, Eurostat, World Bank).  
-2. **Processament** i càlcul d’indicadors a `utils/indicators.py`.  
-3. **Almacenament** en CSV (o Parquet) a `data/`.  
+1. **Càrrega** de dades bulk (FAOSTAT, Eurostat, World Bank).
+2. **Emmagatzematge** en CSV al directori `data/`.  
+3. **Processament** i càlcul d’indicadors a `utils/indicators.py`.  
 4. **Visualització** amb Streamlit + Plotly (Choropleth, Scatter, Boxplot…).  
 5. **Cache** de resultats per accelerar experiència d’usuari (`@st.cache_data`).  
 
@@ -109,8 +100,8 @@ Exporter: `st.download_button` et permet baixar qualsevol subset filtrat a CSV.
 
 ## ✍️ Autoria i crèdits
 
-Projecte desenvolupat per **Jordi Almiñana Domènech**  
-Màster de Ciència de Dades, UOC · Assignatura *Visualització de Dades* (curs 2024-2025)
+Projecte desenvolupat per **Jordi Almiñana Domènech · @jalmenech27**  
+Màster en Ciència de Dades (UOC) · Assignatura *Visualització de Dades* (curs 2024-2025)
 
 Fonts principals: FAO, World Bank, Eurostat. Paleta de colors de ColorBrewer i Viridis. Icons de [Font Awesome](https://fontawesome.com/).
 
@@ -118,4 +109,4 @@ Fonts principals: FAO, World Bank, Eurostat. Paleta de colors de ColorBrewer i V
 
 ## 📝 License
 
-This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
+Aquest projecte es publica sota Creative Commons CC0 1.0 Universal – vegeu l’arxiu [LICENSE](LICENSE) per a més detalls.
