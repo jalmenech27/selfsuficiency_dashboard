@@ -29,20 +29,20 @@ Explorar, comparar i entendre la sostenibilitat i la sobirania alimentària a es
 selfsuficiency_dashboard/
 │
 ├── app.py
-├── pages/                 # Pàgines Streamlit
+├── pages/                 
 │   ├── 1_SSR.py
 │   ├── 2_Export_Import.py
 │   ├── 3_Gender.py
 │   ├── 4_Emissions_CO2.py
 │   └── 5_Production.py
 │
-├── utils/                 # Càrrega, indicadors i gràfics
+├── utils/                 
 │   ├── loaders.py
 │   ├── indicators.py
 │   └── plotting.py
 │
-├── scripts/               # Utilitats de línia d’ordres
-│   └── download_data.py   # ↩︎ baixa i descomprimeix els datasets FAO
+├── scripts/               
+│   └── download_data.py   # baixa i descomprimeix els datasets FAO
 │
 ├── data/                  # S’omple via download_data.py
 │   ├── fao_QCL.csv
@@ -65,7 +65,7 @@ selfsuficiency_dashboard/
 git clone https://github.com/jalmenech27/selfsuficiency_dashboard.git
 cd selfsuficiency_dashboard
 
-python -m venv venv && source venv/bin/activate   # Windows: .env\Scriptsctivate
+python -m venv venv && source venv/bin/activate   
 pip install -r requirements.txt
 
 # 👉 Descarrega datasets (pot trigar uns minuts i ocupar ~2,5 GB)
@@ -93,7 +93,7 @@ La siderbar et permet navegar:
 ## 📈 Metodologia
 
 1. **Càrrega** dels *bulk* FAO/World Bank → `scripts/download_data.py`.  
-2. **Almacenament** en CSV a `data/`.  
+2. **Emmagatzement** en CSV a `data/`.  
 3. **Processament** i càlcul d’indicadors a `utils/indicators.py`.  
 4. **Visualització** amb Streamlit + Plotly.  
 5. **Cache** (`@st.cache_data`) per millorar el rendiment en temps real.
@@ -102,8 +102,8 @@ La siderbar et permet navegar:
 
 ## ✍️ Autoria i crèdits
 
-Projecte de **Jordi Almiñana Domènech**  
-Màster de Ciència de Dades – UOC (2024‑2025)
+Projecte desenvolupat per **Jordi Almiñana Domènech - @jalmenech27**  
+Màster de Ciència de Dades, UOC · Assignatura *Visualització de Dades* (curs 2024-2025)
 
 Fonts: FAOSTAT, World Bank, Eurostat. Paleta ColorBrewer/Viridis. Icons FontAwesome.
 
