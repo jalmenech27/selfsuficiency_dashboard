@@ -2,7 +2,7 @@
 # 🌾 Self-Sufficiency Dashboard
 
 **Visualització interactiva de la sobirania alimentària global**  
-Un projecte de *Data Visualization* dins la pràctica final del Màster en Ciència de Dades (UOC).
+Un projecte de *Data Visualization* dins la pràctica final de l'assignatura *Visualització de Dades* del Màster en Ciència de Dades (UOC).
 
 [![Streamlit](https://img.shields.io/badge/built%20with-Streamlit-fuchsia)](https://streamlit.io)  
 [![License: CC0-1.0](https://img.shields.io/badge/license-CC0%201.0-lightgrey)](LICENSE)
