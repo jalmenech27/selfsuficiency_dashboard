@@ -586,7 +586,7 @@ def main():
             🌍 Panell Global
         </h1>
         <h2 style='color: #4682B4; margin-top: 0; font-weight: 300; font-size: 2.5rem;'>
-            Autosuficiència Alimentària
+            🌾 Autosuficiència Alimentària
         </h2>
         <hr style='width: 50%; margin: 1rem auto; border: 2px solid #2E8B57;'>
     </div>
