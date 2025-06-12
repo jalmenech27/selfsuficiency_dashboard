@@ -426,20 +426,33 @@ def render_correlations_section(data_dict, selected_year):
         if len(merged_data) > 5:
             col1, col2 = st.columns(2)
             
-            with col1:
-                # Correlació Autosuficiència vs Petjada CO2
-                fig_corr1 = px.scatter(
-                    merged_data,
-                    x='SelfSufficiency',
-                    y='FoodFootprintCO2',
-                    title='Autosuficiència vs Petjada de Carboni',
-                    labels={
-                        'SelfSufficiency': 'Autosuficiència',
-                        'FoodFootprintCO2': 'Petjada CO₂'
-                    },
-                    trendline='ols',
-                    hover_data=['AreaName']
-                )
+            with col1:                # Correlació Autosuficiència vs Petjada CO2
+                try:
+                    fig_corr1 = px.scatter(
+                        merged_data,
+                        x='SelfSufficiency',
+                        y='FoodFootprintCO2',
+                        title='Autosuficiència vs Petjada de Carboni',
+                        labels={
+                            'SelfSufficiency': 'Autosuficiència',
+                            'FoodFootprintCO2': 'Petjada CO₂'
+                        },
+                        trendline='ols',
+                        hover_data=['AreaName']
+                    )
+                except Exception:
+                    # Fallback sense trendline si statsmodels no està disponible
+                    fig_corr1 = px.scatter(
+                        merged_data,
+                        x='SelfSufficiency',
+                        y='FoodFootprintCO2',
+                        title='Autosuficiència vs Petjada de Carboni',
+                        labels={
+                            'SelfSufficiency': 'Autosuficiència',
+                            'FoodFootprintCO2': 'Petjada CO₂'
+                        },
+                        hover_data=['AreaName']
+                    )
                 fig_corr1.update_traces(marker=dict(size=8, opacity=0.7))
                 st.plotly_chart(fig_corr1, use_container_width=True)
                 
@@ -453,24 +466,36 @@ def render_correlations_section(data_dict, selected_year):
                 else:
                     st.info(f"➡️ Correlació feble: {correlation_1:.3f}")
             
-            with col2:
-                # Correlació Participació Femenina vs Autosuficiència
+            with col2:                # Correlació Participació Femenina vs Autosuficiència
                 if 'WomenAgriShare' in merged_data.columns:
                     merged_gender = merged_data.dropna(subset=['WomenAgriShare'])
-                    
                     if len(merged_gender) > 5:
-                        fig_corr2 = px.scatter(
-                            merged_gender,
-                            x='WomenAgriShare',
-                            y='SelfSufficiency',
-                            title='Participació Femenina vs Autosuficiència',
-                            labels={
-                                'WomenAgriShare': '% Dones en Agricultura',
-                                'SelfSufficiency': 'Autosuficiència'
-                            },
-                            trendline='ols',
-                            hover_data=['AreaName']
-                        )
+                        try:
+                            fig_corr2 = px.scatter(
+                                merged_gender,
+                                x='WomenAgriShare',
+                                y='SelfSufficiency',
+                                title='Participació Femenina vs Autosuficiència',
+                                labels={
+                                    'WomenAgriShare': '% Dones en Agricultura',
+                                    'SelfSufficiency': 'Autosuficiència'
+                                },
+                                trendline='ols',
+                                hover_data=['AreaName']
+                            )
+                        except Exception:
+                            # Fallback sense trendline
+                            fig_corr2 = px.scatter(
+                                merged_gender,
+                                x='WomenAgriShare',
+                                y='SelfSufficiency',
+                                title='Participació Femenina vs Autosuficiència',
+                                labels={
+                                    'WomenAgriShare': '% Dones en Agricultura',
+                                    'SelfSufficiency': 'Autosuficiència'
+                                },
+                                hover_data=['AreaName']
+                            )
                         fig_corr2.update_traces(marker=dict(size=8, opacity=0.7))
                         st.plotly_chart(fig_corr2, use_container_width=True)
                         
