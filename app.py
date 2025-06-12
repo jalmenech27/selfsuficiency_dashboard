@@ -1,5 +1,5 @@
 """
-Dashboard d'Autosuficiència Alimentària Global - Versió Integrada
+Panell de l'Autosuficiència Alimentària Global - Versió Integrada
 Una sola pàgina amb navegació per seccions
 
 Autor: Jordi Almiñana Domènech
