@@ -510,16 +510,8 @@ def render_correlations_section(data_dict, selected_year):
 
 def render_gender_section(data_dict, selected_year, selected_regions):
     """SECCIÓ 6: Anàlisi de Gènere"""
-    st.markdown("""
-    <div style='text-align: center; margin-bottom: 2rem;'>
-        <h1 style='color: #2E8B57; margin-bottom: 0; font-size: 2.5rem;'>
-            Panell Global
-        </h1>
-        <h2 style='color: #4682B4; margin-top: 0; font-weight: 300; font-size: 1.8rem;'>
-            Autosuficiència Alimentària
-        </h2>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown('<h2 class="section-header" id="genere">👩‍🌾 Perspectiva de Gènere</h2>', 
+                unsafe_allow_html=True)
     
     ssr_data = data_dict['ssr']
     
@@ -588,8 +580,16 @@ def main():
     """Aplicació principal del panell"""
     
     # Títol principal
-    st.markdown('<h1 class="main-header">🌾 Panell Global sobre \n l\'Autosuficiència Alimentària</h1>', 
-                unsafe_allow_html=True)
+    st.markdown("""
+    <div style='text-align: center; margin-bottom: 2rem;'>
+        <h1 style='color: #2E8B57; margin-bottom: 0; font-size: 2.5rem;'>
+            Panell Global
+        </h1>
+        <h2 style='color: #4682B4; margin-top: 0; font-weight: 300; font-size: 1.8rem;'>
+            Autosuficiència Alimentària
+        </h2>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Navegació ràpida
     render_quick_navigation()
