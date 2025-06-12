@@ -581,13 +581,14 @@ def main():
     
     # Títol principal
     st.markdown("""
-    <div style='text-align: center; margin-bottom: 2rem;'>
-        <h1 style='color: #2E8B57; margin-bottom: 0; font-size: 2.5rem;'>
-            Panell Global
+    <div style='text-align: center; margin-bottom: 3rem;'>
+        <h1 style='color: #2E8B57; margin-bottom: 0.5rem; font-size: 4rem; font-weight: 700;'>
+            🌍 Panell Global
         </h1>
-        <h2 style='color: #4682B4; margin-top: 0; font-weight: 300; font-size: 1.8rem;'>
+        <h2 style='color: #4682B4; margin-top: 0; font-weight: 300; font-size: 2.5rem;'>
             Autosuficiència Alimentària
         </h2>
+        <hr style='width: 50%; margin: 1rem auto; border: 2px solid #2E8B57;'>
     </div>
     """, unsafe_allow_html=True)
     
