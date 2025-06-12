@@ -1,5 +1,5 @@
 """
-Dashboard d'Autosuficiència Alimentària Global - Versió Integrada
+Panell de l'Autosuficiència Alimentària Global - Versió Integrada
 Una sola pàgina amb navegació per seccions
 
 Autor: Jordi Almiñana Domènech
@@ -21,7 +21,7 @@ from utils.plotting import create_color_palette, plot_choropleth_map
 # ==========================================
 
 st.set_page_config(
-    page_title="🌾 Dashboard d'Autosuficiència Alimentària Global",
+    page_title="🌾 Panell de l'Autosuficiència Alimentària Global",
     page_icon="🌾",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -71,7 +71,7 @@ def render_quick_navigation():
     """Renderitza la navegació ràpida entre seccions"""
     st.markdown('<div class="quick-nav">', unsafe_allow_html=True)
     
-    col1, col2, col3, col4, col5, col6 = st.columns(6)
+    col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
     
     with col1:
         if st.button("📊 Resum", use_container_width=True):
@@ -80,15 +80,18 @@ def render_quick_navigation():
         if st.button("🗺️ Mapa", use_container_width=True):
             st.query_params = {"section": "mapa"}
     with col3:
+        if st.button("🌍 Global", use_container_width=True):
+            st.query_params = {"section": "global"}
+    with col4:
         if st.button("📈 Evolució", use_container_width=True):
             st.query_params = {"section": "evolucio"}
-    with col4:
+    with col5:
         if st.button("🥗 Productes", use_container_width=True):
             st.query_params = {"section": "productes"}
-    with col5:
+    with col6:
         if st.button("🔗 Correlacions", use_container_width=True):
             st.query_params = {"section": "correlacions"}
-    with col6:
+    with col7:
         if st.button("👩‍🌾 Gènere", use_container_width=True):
             st.query_params = {"section": "genere"}
     
@@ -143,7 +146,7 @@ def render_summary_section(data_dict, selected_year, selected_regions):
         avg_ssr = ssr_year['SelfSufficiency'].mean()
         create_metric_card(
             "Autosuficiència Mitjana",
-            format_number(avg_ssr),
+            format_number(avg_ssr, 3),  # Canviat a 3 decimals
             "Ràtio mitjana d'autosuficiència alimentària (1.0 = autosuficient)"
         )
     
@@ -159,7 +162,7 @@ def render_summary_section(data_dict, selected_year, selected_regions):
         avg_ff = ff_year['FoodFootprintCO2'].mean()
         create_metric_card(
             "Petjada CO₂ Mitjana",
-            format_number(avg_ff),
+            format_number(avg_ff, 4),  # Canviat a 4 decimals
             "Emissions mitjanes de CO₂ per unitat de producció alimentària"
         )
     
@@ -168,7 +171,7 @@ def render_summary_section(data_dict, selected_year, selected_regions):
             avg_women = ssr_year['WomenAgriShare'].mean()
             create_metric_card(
                 "% Dones en Agricultura",
-                format_number(avg_women, 1, "%"),
+                format_number(avg_women, 1, "%"),  # Mantenim 1 decimal per percentatges
                 "Percentatge mitjà de participació femenina en agricultura"
             )
     
@@ -271,6 +274,9 @@ def render_evolution_section(data_dict, selected_regions):
     # Evolució de l'autosuficiència per blocs regionals
     ssr_data = data_dict['ssr'].copy()
     
+    # Calcular mitjana mundial (sempre amb totes les dades)
+    global_evolution = data_dict['ssr'].groupby('Year')['SelfSufficiency'].mean().reset_index()
+    
     if selected_regions != ["Tots"]:
         ssr_data = ssr_data[ssr_data['BlocRegional'].isin(selected_regions)]
     
@@ -286,11 +292,35 @@ def render_evolution_section(data_dict, selected_regions):
             labels={'SelfSufficiency': 'Autosuficiència', 'Year': 'Any'}
         )
         
-        fig_evolution.update_layout(height=500)
+        # Afegir línia de mitjana mundial destacada
+        fig_evolution.add_trace(
+            go.Scatter(
+                x=global_evolution['Year'],
+                y=global_evolution['SelfSufficiency'],
+                mode='lines',
+                name='🌍 Mitjana Mundial',
+                line=dict(color='black', width=4, dash='solid'),
+                hovertemplate='<b>Mitjana Mundial</b><br>Any: %{x}<br>Autosuficiència: %{y:.3f}<extra></extra>'
+            )
+        )
+        
+        fig_evolution.update_layout(
+            height=500,
+            hovermode='x unified',
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
+            )
+        )
         st.plotly_chart(fig_evolution, use_container_width=True)
-    
-    # Evolució de la petjada de carboni
+      # Evolució de la petjada de carboni
     ff_data = data_dict['footprint'].copy()
+    
+    # Calcular mitjana mundial de petjada de carboni
+    global_ff_evolution = data_dict['footprint'].groupby('Year')['FoodFootprintCO2'].mean().reset_index()
     
     if selected_regions != ["Tots"]:
         ff_data = ff_data[ff_data['BlocRegional'].isin(selected_regions)]
@@ -307,7 +337,29 @@ def render_evolution_section(data_dict, selected_regions):
             labels={'FoodFootprintCO2': 'Petjada CO₂', 'Year': 'Any'}
         )
         
-        fig_ff_evolution.update_layout(height=500)
+        # Afegir línia de mitjana mundial destacada
+        fig_ff_evolution.add_trace(
+            go.Scatter(
+                x=global_ff_evolution['Year'],
+                y=global_ff_evolution['FoodFootprintCO2'],
+                mode='lines',
+                name='🌍 Mitjana Mundial',
+                line=dict(color='black', width=4, dash='solid'),
+                hovertemplate='<b>Mitjana Mundial</b><br>Any: %{x}<br>Petjada CO₂: %{y:.4f}<extra></extra>'
+            )
+        )
+        
+        fig_ff_evolution.update_layout(
+            height=500,
+            hovermode='x unified',
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
+            )
+        )
         st.plotly_chart(fig_ff_evolution, use_container_width=True)
 
 def render_products_section(data_dict, selected_year):
@@ -572,22 +624,262 @@ def render_gender_section(data_dict, selected_year, selected_regions):
             fig_gender_evolution.update_layout(height=500)
             st.plotly_chart(fig_gender_evolution, use_container_width=True)
 
+def render_global_analysis_section(data_dict, selected_year):
+    """SECCIÓ: Anàlisi Global del Sistema Alimentari"""
+    st.markdown('<h2 class="section-header" id="global">🌍 Anàlisi Global</h2>', 
+                unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style='background: linear-gradient(90deg, #f0f8ff 0%, #e6f3ff 100%); 
+                padding: 1rem; border-radius: 10px; margin-bottom: 2rem;'>
+        <h4 style='color: #1e3a8a; margin-bottom: 0.5rem;'>📈 Visió Panoràmica del Sistema Alimentari Mundial</h4>
+        <p style='margin: 0; color: #374151;'>
+            Explora els patrons globals de producció, comerç i distribucions estadístiques 
+            per comprendre millor el context de l'autosuficiència alimentària mundial.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # 1. Evolució de Fluxos Mundials (Producció vs Comerç)
+    st.subheader("📊 Evolució de la Producció i Comerç Mundial")
+    
+    # Preparar dades per a la producció mundial
+    if 'production' in data_dict and not data_dict['production'].empty:
+        prod_global = data_dict['production'].groupby('Year')['Production'].sum().reset_index()
+        prod_global['Production'] = prod_global['Production'] / 1_000_000  # Convertir a milions de tones
+    else:
+        prod_global = pd.DataFrame()
+    
+    # Preparar dades per imports i exports mundials
+    ssr_data = data_dict['ssr']
+    if not ssr_data.empty:
+        imports_global = ssr_data.groupby('Year')['Imports'].sum().reset_index()
+        exports_global = ssr_data.groupby('Year')['Exports'].sum().reset_index()
+        imports_global['Imports'] = imports_global['Imports'] / 1_000_000  # Convertir a milions de tones
+        exports_global['Exports'] = exports_global['Exports'] / 1_000_000  # Convertir a milions de tones
+    else:
+        imports_global = pd.DataFrame()
+        exports_global = pd.DataFrame()
+    
+    # Crear gràfic amb eix dual
+    if not prod_global.empty or not imports_global.empty:
+        fig_global_flows = make_subplots(specs=[[{"secondary_y": True}]])
+        
+        # Producció (eix primari)
+        if not prod_global.empty:
+            fig_global_flows.add_trace(
+                go.Scatter(
+                    x=prod_global['Year'], 
+                    y=prod_global['Production'],
+                    name='Producció',
+                    line=dict(color='royalblue', width=3),
+                    hovertemplate='<b>Producció</b><br>Any: %{x}<br>Producció: %{y:.0f}M tones<extra></extra>'
+                ),
+                secondary_y=False
+            )
+        
+        # Imports (eix secundari)
+        if not imports_global.empty:
+            fig_global_flows.add_trace(
+                go.Scatter(
+                    x=imports_global['Year'], 
+                    y=imports_global['Imports'],
+                    name='Importacions',
+                    line=dict(color='red', width=2),
+                    hovertemplate='<b>Importacions</b><br>Any: %{x}<br>Importacions: %{y:.0f}M tones<extra></extra>'
+                ),
+                secondary_y=True
+            )
+        
+        # Exports (eix secundari)
+        if not exports_global.empty:
+            fig_global_flows.add_trace(
+                go.Scatter(
+                    x=exports_global['Year'], 
+                    y=exports_global['Exports'],
+                    name='Exportacions',
+                    line=dict(color='green', width=2),
+                    hovertemplate='<b>Exportacions</b><br>Any: %{x}<br>Exportacions: %{y:.0f}M tones<extra></extra>'
+                ),
+                secondary_y=True
+            )
+        
+        # Configurar títols i etiquetes
+        fig_global_flows.update_layout(
+            title='Evolució de la Producció i Comerç Alimentari Mundial',
+            template='plotly_white',
+            height=500,
+            hovermode='x unified',
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
+            )
+        )
+        
+        # Configurar eixos Y
+        fig_global_flows.update_yaxes(
+            title_text='Producció (Milions de Tones)',
+            secondary_y=False
+        )
+        fig_global_flows.update_yaxes(
+            title_text='Comerç (Milions de Tones)',
+            secondary_y=True
+        )
+        
+        st.plotly_chart(fig_global_flows, use_container_width=True)
+    
+    # 2. Distribucions Estadístiques Avançades
+    st.subheader("📈 Distribucions Estadístiques Globals")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("**Distribució de l'Autosuficiència**")
+        
+        # Filtrar dades útils (SSR != 1)
+        ssr_useful = data_dict['ssr'][data_dict['ssr']['SelfSufficiency'] != 1]
+        
+        if not ssr_useful.empty:
+            median_ssr = ssr_useful['SelfSufficiency'].median()
+            mean_ssr = ssr_useful['SelfSufficiency'].mean()
+            
+            fig_ssr_dist = px.histogram(
+                ssr_useful,
+                x='SelfSufficiency',
+                nbins=50,
+                title='Distribució de l\'Autosuficiència (SSR ≠ 1)',
+                labels={'SelfSufficiency': 'Índex d\'Autosuficiència', 'count': 'Freqüència'},
+                color_discrete_sequence=['#2E8B57']
+            )
+            
+            # Afegir línies de mediana i mitjana
+            fig_ssr_dist.add_vline(
+                x=median_ssr,
+                line_dash="dash",
+                line_color="red",
+                annotation_text=f"Mediana: {median_ssr:.3f}",
+                annotation_position="top left"
+            )
+            fig_ssr_dist.add_vline(
+                x=mean_ssr,
+                line_dash="dot",
+                line_color="green",
+                annotation_text=f"Mitjana: {mean_ssr:.3f}",
+                annotation_position="top right"
+            )
+            
+            fig_ssr_dist.update_layout(height=400, template='plotly_white')
+            st.plotly_chart(fig_ssr_dist, use_container_width=True)
+    
+    with col2:
+        st.markdown("**Distribució de la Petjada de Carboni**")
+        
+        ff_data = data_dict['footprint']
+        if not ff_data.empty:
+            # Filtrar outliers (95è percentil)
+            ff_filtered = ff_data[ff_data['FoodFootprintCO2'] < ff_data['FoodFootprintCO2'].quantile(0.95)]
+            
+            if not ff_filtered.empty:
+                median_ff = ff_filtered['FoodFootprintCO2'].median()
+                mean_ff = ff_filtered['FoodFootprintCO2'].mean()
+                
+                fig_ff_dist = px.histogram(
+                    ff_filtered,
+                    x='FoodFootprintCO2',
+                    nbins=50,
+                    title='Distribució de la Petjada de Carboni',
+                    labels={'FoodFootprintCO2': 'Petjada CO₂', 'count': 'Freqüència'},
+                    color_discrete_sequence=['#CD853F']
+                )
+                
+                # Afegir línies de mediana i mitjana
+                fig_ff_dist.add_vline(
+                    x=median_ff,
+                    line_dash="dash",
+                    line_color="red",
+                    annotation_text=f"Mediana: {median_ff:.4f}",
+                    annotation_position="top left"
+                )
+                fig_ff_dist.add_vline(
+                    x=mean_ff,
+                    line_dash="dot",
+                    line_color="green",
+                    annotation_text=f"Mitjana: {mean_ff:.4f}",
+                    annotation_position="top right"
+                )
+                
+                fig_ff_dist.update_layout(height=400, template='plotly_white')
+                st.plotly_chart(fig_ff_dist, use_container_width=True)
+    
+    # 3. Estadístiques Globals Destacades
+    st.subheader("🎯 Estadístiques Clau del Sistema Alimentari Mundial")
+    
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        if not data_dict['ssr'].empty:
+            total_countries = len(data_dict['ssr']['AreaName'].unique())
+            create_metric_card(
+                "Països Analitzats",
+                f"{total_countries:,}",
+                "Nombre total de països amb dades disponibles"
+            )
+    
+    with col2:
+        if not ssr_useful.empty:
+            deficit_countries = len(ssr_useful[ssr_useful['SelfSufficiency'] < 1])
+            surplus_countries = len(ssr_useful[ssr_useful['SelfSufficiency'] > 1])
+            create_metric_card(
+                "Dèficit vs Superàvit",
+                f"{deficit_countries:,} / {surplus_countries:,}",
+                "Països amb dèficit vs superàvit alimentari"
+            )
+    
+    with col3:
+        if not data_dict['production'].empty:
+            years_span = data_dict['production']['Year'].max() - data_dict['production']['Year'].min()
+            create_metric_card(
+                "Període Temporal",
+                f"{years_span:,} anys",
+                f"Des de {data_dict['production']['Year'].min()} fins {data_dict['production']['Year'].max()}"
+            )
+    
+    with col4:
+        if not data_dict['footprint'].empty:
+            co2_total = data_dict['footprint']['FoodFootprintCO2'].sum()
+            create_metric_card(
+                "Impacte CO₂ Acumulat",
+                f"{co2_total:.2e}",
+                "Emissions totals acumulades del sistema alimentari"
+            )
+
 # ==========================================
 # APLICACIÓ PRINCIPAL
 # ==========================================
 
 def main():
-    """Aplicació principal del dashboard"""
-    
-    # Títol principal
-    st.markdown('<h1 class="main-header">🌾 Dashboard d\'Autosuficiència Alimentària Global</h1>', 
-                unsafe_allow_html=True)
+    """Aplicació principal del panell"""
+      # Títol principal
+    st.markdown("""
+    <div style='text-align: center; margin-bottom: 3rem;'>
+        <h1 style='color: #2E8B57; font-size: 4rem; font-weight: 700; margin-bottom: 0.5rem;'>
+            � Panell Global
+        </h1>
+        <h2 style='color: #4682B4; font-size: 2.5rem; font-weight: 300; margin-top: 0;'>
+            Autosuficiència Alimentària
+        </h2>
+        <hr style='width: 50%; margin: 1rem auto; border: 2px solid #2E8B57;'>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Navegació ràpida
     render_quick_navigation()
     
     # Sidebar per controls
-    st.sidebar.header("⚙️ Controls del Dashboard")
+    st.sidebar.header("⚙️ Controls del Panell")
     
     # Càrrega de dades
     with st.spinner("Carregant dades..."):
@@ -627,10 +919,10 @@ def main():
     **Període:** 1961-2023
     **Països:** 245+
     """)
-    
-    # Renderitzar totes les seccions
+      # Renderitzar totes les seccions
     render_summary_section(data_dict, selected_year, selected_regions)
     render_map_section(data_dict, selected_year, selected_regions)
+    render_global_analysis_section(data_dict, selected_year)
     render_evolution_section(data_dict, selected_regions)
     render_products_section(data_dict, selected_year)
     render_correlations_section(data_dict, selected_year)
@@ -640,7 +932,7 @@ def main():
     st.markdown("---")
     st.markdown("""
     <div style='text-align: center; color: #666;'>
-        <p><strong>Dashboard d'Autosuficiència Alimentària Global</strong></p>
+        <p><strong>Panell de l'Autosuficiència Alimentària Global</strong></p>
         <p>Desenvolupat per <strong>Jordi Almiñana Domènech</strong> - Màster en Ciència de Dades (UOC)</p>
         <p>Assignatura: Visualització de Dades | Fonts: FAOSTAT, World Bank</p>
     </div>
