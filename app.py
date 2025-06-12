@@ -21,7 +21,7 @@ from utils.plotting import create_color_palette, plot_choropleth_map
 # ==========================================
 
 st.set_page_config(
-    page_title="🌾 Dashboard d'Autosuficiència Alimentària Global",
+    page_title="🌾 Panell de l'Autosuficiència Alimentària Global",
     page_icon="🌾",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -577,17 +577,17 @@ def render_gender_section(data_dict, selected_year, selected_regions):
 # ==========================================
 
 def main():
-    """Aplicació principal del dashboard"""
+    """Aplicació principal del panell"""
     
     # Títol principal
-    st.markdown('<h1 class="main-header">🌾 Dashboard d\'Autosuficiència Alimentària Global</h1>', 
+    st.markdown('<h1 class="main-header">🌾 Panell de l\'Autosuficiència Alimentària Global</h1>', 
                 unsafe_allow_html=True)
     
     # Navegació ràpida
     render_quick_navigation()
     
     # Sidebar per controls
-    st.sidebar.header("⚙️ Controls del Dashboard")
+    st.sidebar.header("⚙️ Controls del Panell")
     
     # Càrrega de dades
     with st.spinner("Carregant dades..."):
@@ -640,7 +640,7 @@ def main():
     st.markdown("---")
     st.markdown("""
     <div style='text-align: center; color: #666;'>
-        <p><strong>Dashboard d'Autosuficiència Alimentària Global</strong></p>
+        <p><strong>Panell de l'Autosuficiència Alimentària Global</strong></p>
         <p>Desenvolupat per <strong>Jordi Almiñana Domènech</strong> - Màster en Ciència de Dades (UOC)</p>
         <p>Assignatura: Visualització de Dades | Fonts: FAOSTAT, World Bank</p>
     </div>
