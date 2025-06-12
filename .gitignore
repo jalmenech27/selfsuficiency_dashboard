@@ -1,0 +1,38 @@
+# Arxius de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema operatiu
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Logs
+*.log
+
+# Fitxers temporals
+*.tmp
+*.temp
+
+# Només mantenim les dades preprocessades
+data/*.csv
+!data/*.csv.gz

@@ -1,112 +1,142 @@
+# Dashboard d'Autosuficiència Alimentària Global - Versió Integrada 🌾
 
-# 🌾 Self-Sufficiency Dashboard
+Aquest és un dashboard interactiu d'una sola pàgina que analitza l'autosuficiència alimentària global utilitzant dades preprocessades de FAOSTAT i el Banc Mundial.
 
-**Visualització interactiva de la sobirania alimentària global**  
-Un projecte de *Data Visualization* dins la pràctica final del Màster en Ciència de Dades (UOC).
+## 🎯 Característiques Principals
 
-[![Streamlit](https://img.shields.io/badge/built%20with-Streamlit-fuchsia)](https://streamlit.io)  
-[![License: CC0-1.0](https://img.shields.io/badge/license-CC0%201.0-lightgrey)](LICENSE)
+- **Dashboard d'una sola pàgina** amb navegació fluida entre seccions
+- **Dades preprocessades** (18MB total vs 2.5GB originals) 
+- **Compatible amb Streamlit Cloud** (tots els fitxers <25MB)
+- **6 seccions interactives** amb més de 15 visualitzacions
+- **Navegació ràpida** amb botons de salts directes
+- **Filtratge dinàmic** per any i blocs regionals
 
+## 📊 Seccions del Dashboard
 
----
+### 1. 📊 Indicadors Principals
+- Mètriques clau d'autosuficiència, petjada CO₂ i participació femenina
+- Distribucions dels indicadors principals
+- Targetes de mètriques amb estil personalitzat
 
-## 🗺️ Objectiu
+### 2. 🗺️ Distribució Global  
+- Mapa mundial d'autosuficiència alimentària
+- Mapa mundial de petjada de carboni
+- Visualització coroplètica interactiva
 
-El quadre de comandament permet explorar, comparar i entendre la relació entre:
+### 3. 📈 Evolució Temporal
+- Tendències per blocs regionals al llarg del temps
+- Evolució de l'autosuficiència i petjada CO₂
+- Gràfics de línies multi-sèrie
 
-| Indicador | Descripció | Font |
-|-----------|------------|------|
-| **Self-Sufficiency Ratio (SSR)** | Producció pròpia vs. disponibilitat domèstica d’aliments | FAOSTAT (QCL + Trade) |
-| **Export/Import Balance** | Pes de les exportacions i importacions en tones | FAOSTAT, Eurostat |
-| **WomenAgriShare** | Quota femenina dins de la mà d’obra agrícola | World Bank WDI |
-| **Food Footprint CO₂** | Emissions agrícoles (CO₂ eq) per tona produïda | FAOSTAT Emissions |
-| **Producció vegetal / ramadera** | Evolució i volum de producció per país i cultiu | FAOSTAT QCL |
+### 4. 🥗 Anàlisi de Productes
+- Top 10 productes per producció i importació
+- Balanç comercial per producte
+- Comparatives import-export
 
----
+### 5. 🔗 Anàlisi de Correlacions
+- Correlació autosuficiència vs petjada de carboni
+- Correlació participació femenina vs autosuficiència  
+- Scatter plots amb línies de tendència
 
-## 🗂️ Estructura del repositori
+### 6. 👩‍🌾 Perspectiva de Gènere
+- Distribució de participació femenina per regions
+- Evolució temporal de la participació femenina
+- Anàlisi de l'impacte del gènere en l'agricultura
 
-```
-selfsuficiency_dashboard/
-│
-├── app.py                  # Lander + barra lateral global
-│
-├── pages/                  # Pàgines Streamlit
-│   ├── 1_SSR.py
-│   ├── 2_Export_Import.py
-│   ├── 3_Gender.py
-│   ├── 4_Emissions_CO2.py
-│   └── 5_Production.py
-│
-├── data/
-│   ├── fao_QCL.csv
-│   ├── fao_FBS.csv
-│   ├── fao_ET.csv
-│   ├── fao_EI.csv
-│   └── wb_gender.csv
-│
-└── utils/
-    ├── loaders.py
-    ├── indicators.py
-    └── plotting.py
-```
+## 🚀 Execució
 
-> 🔒 **Nota dades**  
-> Els fitxers CSV no s’inclouen al GitHub per grandària; ves a `scripts/download_data.py` o a la Wiki del repo per saber com descarregar-los amb l’API de la FAO i del Banc Mundial.
-
----
-
-## 🚀 Instal·lació ràpida
-
+### Instal·lació
 ```bash
-git clone https://github.com/jalmenech27/selfsuficiency_dashboard.git
-cd selfsuficiency_dashboard
-
-python -m venv venv
-source venv/bin/activate
-
 pip install -r requirements.txt
-
-python scripts/download_data.py     # opcional
 ```
 
----
-
-## ▶️ Execució local
-
+### Execució Local
 ```bash
 streamlit run app.py
 ```
 
-La pàgina inicial mostra els KPI globals i la navegació lateral:
+### Desplegament a Streamlit Cloud
+1. Puja el repositori a GitHub
+2. Connecta amb Streamlit Cloud
+3. L'aplicació es desplegarà automàticament
 
-1. **SSR** – Autosuficiència alimentària  
-2. **Export / Import** – Dades de comerç (exportacions i importacions)  
-3. **Gender** – Participació femenina a l'agricultura
-4. **Emissions CO₂** – Intensitat emissions   
-5. **Production** – Tendències de producció  
+## 📁 Estructura
 
----
+```
+integrated_dashboard/
+├── app.py                    # Aplicació principal
+├── utils/
+│   ├── loaders.py           # Funcions de càrrega de dades
+│   ├── indicators.py        # Càlculs d'indicadors
+│   └── plotting.py          # Funcions de visualització
+├── data/                    # Dades preprocessades (CSV.gz)
+│   ├── ssr_women.csv.gz     # Autosuficiència + gènere
+│   ├── food_footprint.csv.gz
+│   ├── production.csv.gz
+│   ├── imports.csv.gz
+│   ├── exports.csv.gz
+│   └── *.csv.gz
+├── requirements.txt
+└── README.md
+```
 
-## 📈 Metodologia
+## 🗺️ Blocs Regionals
 
-1. **Càrrega** de dades bulk (FAOSTAT, Eurostat, World Bank).
-2. **Emmagatzematge** en CSV al directori `data/`.  
-3. **Processament** i càlcul d’indicadors a `utils/indicators.py`.  
-4. **Visualització** amb Streamlit + Plotly (Choropleth, Scatter, Boxplot…).  
-5. **Cache** de resultats per accelerar experiència d’usuari (`@st.cache_data`).  
+- **EU27**: 27 països de la Unió Europea
+- **Amèrica Llatina i Carib**: 33 països
+- **Àfrica Subsahariana**: 48 països  
+- **Nord d'Àfrica**: 5 països
+- **Àsia Oriental i Sud-oriental**: 17 països
+- **Àsia Meridional**: 9 països
+- **Àsia Occidental i Àsia Central**: 22 països
+- **Amèrica del Nord**: 2 països
+- **Oceania**: 14 països
 
----
+## 📊 Indicadors Calculats
 
-## ✍️ Autoria i crèdits
+### Autosuficiència Alimentària (SSR)
+```
+SSR = Producció / (Producció + Importacions - Exportacions)
+```
 
-Projecte desenvolupat per **Jordi Almiñana Domènech · @jalmenech27**  
-Màster en Ciència de Dades (UOC) · Assignatura *Visualització de Dades* (curs 2024-2025)
+### Petjada Alimentària CO₂
+```
+FF = Emissions Totals CO₂ / Producció Total
+```
 
-Fonts principals: FAO, World Bank, Eurostat. Paleta de colors de ColorBrewer i Viridis. Icons de [Font Awesome](https://fontawesome.com/).
+### Participació Femenina
+Percentatge de dones en el sector agrícola per país
 
----
+## 🎨 Funcionalitats Avançades
 
-## 📝 License
+- **Navegació ràpida**: Botons sticky per saltar entre seccions
+- **Filtratge intel·ligent**: Selecció d'any i regions amb actualització automàtica
+- **Visualitzacions responsives**: Adapten a qualsevol mida de pantalla
+- **Correlacions automàtiques**: Càlcul i interpretació de correlacions
+- **Estil personalitzat**: CSS customitzat per una UX premium
+- **Caching optimitzat**: Càrrega instantània de dades amb `@st.cache_data`
 
-Aquest projecte es publica sota Creative Commons CC0 1.0 Universal – vegeu l’arxiu [LICENSE](LICENSE) per a més detalls.
+## 🔧 Optimitzacions Tècniques
+
+- **Compressió eficient**: Reducció del 99.2% de la mida original (2.5GB → 18MB)
+- **Format CSV.gz**: Màxima compatibilitat i compressió
+- **Caching multi-nivell**: Dades, càlculs i visualitzacions en cache
+- **Arquitectura modular**: Utils separats per fàcil manteniment
+- **Fallbacks robustos**: Compatibilitat amb dades originals si cal
+
+## 📊 Fonts de Dades
+
+- **FAOSTAT**: Organització de les Nacions Unides per a l'Alimentació i l'Agricultura
+- **World Bank**: Indicadors de desenvolupament mundial
+- **Període temporal**: 1961-2023
+- **Cobertura geogràfica**: 245+ països i territoris
+
+## ✍️ Autoria
+
+**Jordi Almiñana Domènech** - @jalmenech27  
+Màster en Ciència de Dades (UOC) - Visualització de Dades  
+Curs 2024-2025
+
+## 📝 Llicència
+
+Creative Commons CC0 1.0 Universal - Lliure d'usos amb atribució voluntària
