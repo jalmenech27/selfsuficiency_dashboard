@@ -143,7 +143,7 @@ def render_summary_section(data_dict, selected_year, selected_regions):
         avg_ssr = ssr_year['SelfSufficiency'].mean()
         create_metric_card(
             "Autosuficiència Mitjana",
-            format_number(avg_ssr),
+            format_number(avg_ssr, 3),  # Canviat a 3 decimals
             "Ràtio mitjana d'autosuficiència alimentària (1.0 = autosuficient)"
         )
     
@@ -159,7 +159,7 @@ def render_summary_section(data_dict, selected_year, selected_regions):
         avg_ff = ff_year['FoodFootprintCO2'].mean()
         create_metric_card(
             "Petjada CO₂ Mitjana",
-            format_number(avg_ff),
+            format_number(avg_ff, 4),  # Canviat a 4 decimals
             "Emissions mitjanes de CO₂ per unitat de producció alimentària"
         )
     
@@ -168,7 +168,7 @@ def render_summary_section(data_dict, selected_year, selected_regions):
             avg_women = ssr_year['WomenAgriShare'].mean()
             create_metric_card(
                 "% Dones en Agricultura",
-                format_number(avg_women, 1, "%"),
+                format_number(avg_women, 1, "%"),  # Mantenim 1 decimal per percentatges
                 "Percentatge mitjà de participació femenina en agricultura"
             )
     
