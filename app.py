@@ -580,7 +580,7 @@ def main():
     """Aplicació principal del panell"""
     
     # Títol principal
-    st.markdown('<h1 class="main-header">🌾 Panell de l\'Autosuficiència Alimentària Global</h1>', 
+    st.markdown('<h1 class="main-header">🌾 Panell Global sobre \n l\'Autosuficiència Alimentària</h1>', 
                 unsafe_allow_html=True)
     
     # Navegació ràpida
