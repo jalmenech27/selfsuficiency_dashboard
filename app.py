@@ -394,9 +394,121 @@ def render_evolution_section(data_dict, selected_regions):
                 y=1.02,
                 xanchor="right",
                 x=1
-            )
-        )
+            )        )
         st.plotly_chart(fig_ff_evolution, use_container_width=True)
+    
+    # Anàlisi de canvis temporals en l'autosuficiència
+    st.subheader("📊 Canvis Temporals en l'Autosuficiència")
+    
+    # Definir blocs regionals per assignar països
+    REGIONAL_BLOCS = {
+        'EU27': [
+            'Austria', 'Belgium', 'Bulgaria', 'Croatia', 'Cyprus', 'Czechia',
+            'Denmark', 'Estonia', 'Finland', 'France', 'Germany', 'Greece',
+            'Hungary', 'Ireland', 'Italy', 'Latvia', 'Lithuania', 'Luxembourg',
+            'Malta', 'Netherlands', 'Poland', 'Portugal', 'Romania', 'Slovakia',
+            'Slovenia', 'Spain', 'Sweden'
+        ],
+        'Amèrica Llatina i Carib': [
+            'Antigua and Barbuda', 'Argentina', 'Bahamas', 'Barbados', 'Belize',
+            'Bolivia (Plurinational State of)', 'Brazil', 'Chile', 'Colombia',
+            'Costa Rica', 'Cuba', 'Dominica', 'Dominican Republic', 'Ecuador',
+            'El Salvador', 'Grenada', 'Guatemala', 'Guyana', 'Haiti', 'Honduras',
+            'Jamaica', 'Mexico', 'Nicaragua', 'Panama', 'Paraguay', 'Peru',
+            'Saint Kitts and Nevis', 'Saint Lucia', 'Saint Vincent and the Grenadines',
+            'Suriname', 'Trinidad and Tobago', 'Uruguay', 'Venezuela (Bolivarian Republic of)'
+        ],
+        'Àfrica Subsahariana': [
+            'Angola', 'Benin', 'Botswana', 'Burkina Faso', 'Burundi', 'Cabo Verde',
+            'Cameroon', 'Central African Republic', 'Chad', 'Comoros', 'Congo',
+            "Côte d'Ivoire", 'Democratic Republic of the Congo', 'Djibouti',
+            'Equatorial Guinea', 'Eritrea', 'Eswatini', 'Ethiopia', 'Gabon',
+            'Gambia', 'Ghana', 'Guinea', 'Guinea-Bissau', 'Kenya', 'Lesotho',
+            'Liberia', 'Madagascar', 'Malawi', 'Mali', 'Mauritania', 'Mauritius',
+            'Mozambique', 'Namibia', 'Niger', 'Nigeria', 'Rwanda',
+            'Sao Tome and Principe', 'Senegal', 'Seychelles', 'Sierra Leone',
+            'Somalia', 'South Africa', 'South Sudan', 'Sudan', 'Togo', 'Uganda',
+            'United Republic of Tanzania', 'Zambia', 'Zimbabwe'
+        ],
+        'Nord d\'Àfrica': [
+            'Algeria', 'Egypt', 'Libya', 'Morocco', 'Tunisia'
+        ],
+        'Àsia Oriental i Sud-oriental': [
+            'Brunei Darussalam', 'Cambodia', 'China', 'China, Hong Kong SAR',
+            'China, Macao SAR', "Democratic People's Republic of Korea", 'Indonesia',
+            'Japan', "Lao People's Democratic Republic", 'Malaysia', 'Mongolia',
+            'Myanmar', 'Philippines', 'Republic of Korea', 'Singapore', 'Thailand',
+            'Timor-Leste', 'Viet Nam'
+        ],
+        'Àsia Meridional': [
+            'Afghanistan', 'Bangladesh', 'Bhutan', 'India', 'Iran (Islamic Republic of)',
+            'Maldives', 'Nepal', 'Pakistan', 'Sri Lanka'
+        ],
+        'Àsia Occidental i Àsia Central': [
+            'Armenia', 'Azerbaijan', 'Bahrain', 'Cyprus', 'Georgia', 'Iraq',
+            'Israel', 'Jordan', 'Kazakhstan', 'Kuwait', 'Kyrgyzstan', 'Lebanon',
+            'Oman', 'Qatar', 'Saudi Arabia', 'State of Palestine', 'Syrian Arab Republic',
+            'Tajikistan', 'Turkey', 'Turkmenistan', 'United Arab Emirates',
+            'Uzbekistan', 'Yemen'
+        ],
+        'Amèrica del Nord': [
+            'Canada', 'United States of America'
+        ],
+        'Oceania': [
+            'Australia', 'Fiji', 'Kiribati', 'Marshall Islands', 'Micronesia (Federated States of)',
+            'Nauru', 'New Zealand', 'Palau', 'Papua New Guinea', 'Samoa', 'Solomon Islands',
+            'Tonga', 'Tuvalu', 'Vanuatu'
+        ]
+    }
+    
+    # Crear mapa de països a blocs regionals
+    country_to_bloc_map = {}
+    for bloc_name, countries in REGIONAL_BLOCS.items():
+        for country in countries:
+            country_to_bloc_map[country] = bloc_name
+    
+    # Filtrar dades útils per al canvi temporal
+    ssr_useful = data_dict['ssr'][data_dict['ssr']['SelfSufficiency'] != 1].copy()
+    
+    if not ssr_useful.empty and 'AreaName' in ssr_useful.columns:
+        # Calcular canvi SSR (2000-2013)
+        ssr_2000 = ssr_useful[ssr_useful['Year'] == 2000]
+        ssr_2013 = ssr_useful[ssr_useful['Year'] == 2013]
+        
+        if not ssr_2000.empty and not ssr_2013.empty:
+            change_df = pd.merge(
+                ssr_2000[['AreaCode', 'AreaName', 'SelfSufficiency']],
+                ssr_2013[['AreaCode', 'AreaName', 'SelfSufficiency']], 
+                on=['AreaCode', 'AreaName'], 
+                suffixes=('_2000', '_2013')
+            )
+            change_df['Variació SSR'] = change_df['SelfSufficiency_2013'] - change_df['SelfSufficiency_2000']
+            change_df = change_df.dropna(subset=['Variació SSR']).sort_values('Variació SSR', ascending=False)
+            
+            if len(change_df) >= 20: 
+                top_bottom = pd.concat([change_df.head(10), change_df.tail(10)])
+                top_bottom['Tipus'] = ['Augment' if v > 0 else 'Disminució' for v in top_bottom['Variació SSR']]
+                
+                fig_top_bottom = px.bar(
+                    top_bottom.sort_values('Variació SSR'), 
+                    x='Variació SSR', 
+                    y='AreaName',
+                    orientation='h',
+                    color='Tipus',
+                    color_discrete_map={'Augment': 'royalblue', 'Disminució': 'crimson'},
+                    text='AreaName',
+                    title="Països amb Major Variació d'Autosuficiència (SSR) (2000-2013)",
+                    labels={'AreaName': 'País', 'Variació SSR': "Canvi en l'índex SSR"}
+                )
+                fig_top_bottom.update_traces(texttemplate='%{text}', textposition='outside')
+                fig_top_bottom.update_layout(
+                    uniformtext_minsize=8, 
+                    legend_title_text='Tipus de Variació',
+                    margin=dict(l=50, r=20, t=50, b=40),
+                    yaxis_visible=False,
+                    height=600
+                )
+                st.plotly_chart(fig_top_bottom, use_container_width=True)
 
 def create_color_palette_for_products(prod_top_df=None, imports_top_df=None, exports_top_df=None):
     """Crea una paleta de colors consistents per als productes entre diferents gràfics (del notebook)"""
@@ -769,13 +881,11 @@ def render_correlations_section(data_dict, selected_year):
                             st.warning(f"📉 Correlació negativa moderada: {correlation_2:.3f}")
                         elif correlation_2 > 0.3:
                             st.success(f"📈 Correlació positiva moderada: {correlation_2:.3f}")
-                        else:
-                            st.info(f"➡️ Correlació feble: {correlation_2:.3f}")
+                        else:                            st.info(f"➡️ Correlació feble: {correlation_2:.3f}")    
+    # 3. GRÀFIC ANIMAT DE CORRELACIÓ PER BLOCS REGIONALS (del notebook)
+    st.subheader("🎬 Evolució Anual: Autosuficiència vs. Petjada de Carboni per Blocs")
     
-    # 2. ANÀLISI DE CANVIS TEMPORALS (del notebook)
-    st.subheader("📊 Canvis Temporals en l'Autosuficiència")
-    
-    # Definir blocs regionals per assignar països
+    # Redefinir variables necessàries per al gràfic animat
     REGIONAL_BLOCS = {
         'EU27': [
             'Austria', 'Belgium', 'Bulgaria', 'Croatia', 'Cyprus', 'Czechia',
@@ -842,51 +952,8 @@ def render_correlations_section(data_dict, selected_year):
         for country in countries:
             country_to_bloc_map[country] = bloc_name
     
-    # Filtrar dades útils per al canvi temporal
+    # Filtrar dades útils per al gràfic animat
     ssr_useful = data_dict['ssr'][data_dict['ssr']['SelfSufficiency'] != 1].copy()
-    
-    if not ssr_useful.empty and 'AreaName' in ssr_useful.columns:
-        # Calcular canvi SSR (2000-2013)
-        ssr_2000 = ssr_useful[ssr_useful['Year'] == 2000]
-        ssr_2013 = ssr_useful[ssr_useful['Year'] == 2013]
-        
-        if not ssr_2000.empty and not ssr_2013.empty:
-            change_df = pd.merge(
-                ssr_2000[['AreaCode', 'AreaName', 'SelfSufficiency']],
-                ssr_2013[['AreaCode', 'AreaName', 'SelfSufficiency']], 
-                on=['AreaCode', 'AreaName'], 
-                suffixes=('_2000', '_2013')
-            )
-            change_df['Variació SSR'] = change_df['SelfSufficiency_2013'] - change_df['SelfSufficiency_2000']
-            change_df = change_df.dropna(subset=['Variació SSR']).sort_values('Variació SSR', ascending=False)
-            
-            if len(change_df) >= 20: 
-                top_bottom = pd.concat([change_df.head(10), change_df.tail(10)])
-                top_bottom['Tipus'] = ['Augment' if v > 0 else 'Disminució' for v in top_bottom['Variació SSR']]
-                
-                fig_top_bottom = px.bar(
-                    top_bottom.sort_values('Variació SSR'), 
-                    x='Variació SSR', 
-                    y='AreaName',
-                    orientation='h',
-                    color='Tipus',
-                    color_discrete_map={'Augment': 'royalblue', 'Disminució': 'crimson'},
-                    text='AreaName',
-                    title="Països amb Major Variació d'Autosuficiència (SSR) (2000-2013)",
-                    labels={'AreaName': 'País', 'Variació SSR': "Canvi en l'índex SSR"}
-                )
-                fig_top_bottom.update_traces(texttemplate='%{text}', textposition='outside')
-                fig_top_bottom.update_layout(
-                    uniformtext_minsize=8, 
-                    legend_title_text='Tipus de Variació',
-                    margin=dict(l=50, r=20, t=50, b=40),
-                    yaxis_visible=False,
-                    height=600
-                )
-                st.plotly_chart(fig_top_bottom, use_container_width=True)
-    
-    # 3. GRÀFIC ANIMAT DE CORRELACIÓ PER BLOCS REGIONALS (del notebook)
-    st.subheader("🎬 Evolució Anual: Autosuficiència vs. Petjada de Carboni per Blocs")
     
     if not ssr_useful.empty and 'footprint' in data_dict and not data_dict['footprint'].empty:
         # Preparació de dades per al gràfic animat
