@@ -866,7 +866,7 @@ def main():
     st.markdown("""
     <div style='text-align: center; margin-bottom: 3rem;'>
         <h1 style='color: #2E8B57; font-size: 4rem; font-weight: 700; margin-bottom: 0.5rem;'>
-             Panell Global
+            🌍 Panell Global
         </h1>
         <h2 style='color: #4682B4; font-size: 2.5rem; font-weight: 300; margin-top: 0;'>
             Autosuficiència Alimentària 🌾
