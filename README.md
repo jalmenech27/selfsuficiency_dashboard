@@ -1,18 +1,9 @@
-# Dashboard d'Autosuficiència Alimentària Global - Versió Integrada 🌾
+# Panell Global sobre l'Autosuficiència Alimentària 🌾
 
 Aquest és un dashboard interactiu d'una sola pàgina que analitza l'autosuficiència alimentària global utilitzant dades preprocessades de FAOSTAT i el Banc Mundial.
 
 **Visualització interactiva de la sobirania alimentària global**  
 Un projecte de *Data Visualization* dins la pràctica final de l'assignatura *Visualització de Dades* del Màster en Ciència de Dades (UOC).
-
-## 🎯 Característiques Principals
-
-- **Dashboard d'una sola pàgina** amb navegació fluida entre seccions
-- **Dades preprocessades** (18MB total vs 2.5GB originals) 
-- **Compatible amb Streamlit Cloud** (tots els fitxers <25MB)
-- **6 seccions interactives** amb més de 15 visualitzacions
-- **Navegació ràpida** amb botons de salts directes
-- **Filtratge dinàmic** per any i blocs regionals
 
 ## 📊 Seccions del Dashboard
 
@@ -78,9 +69,8 @@ streamlit run app.py
 ```
 
 ### Desplegament a Streamlit Cloud
-1. Puja el repositori a GitHub
-2. Connecta amb Streamlit Cloud
-3. L'aplicació es desplegarà automàticament
+
+https://selfsuficiency.streamlit.app/
 
 ## 📁 Estructura del Projecte
 
@@ -129,14 +119,6 @@ FF = Emissions Totals CO₂ / Producció Total
 ### Participació Femenina
 Percentatge de dones en el sector agrícola per país
 
-## 🎨 Funcionalitats Avançades
-
-- **Navegació ràpida**: Botons sticky per saltar entre seccions
-- **Filtratge intel·ligent**: Selecció d'any i regions amb actualització automàtica
-- **Visualitzacions responsives**: Adapten a qualsevol mida de pantalla
-- **Correlacions automàtiques**: Càlcul i interpretació de correlacions
-- **Estil personalitzat**: CSS customitzat per una UX premium
-- **Caching optimitzat**: Càrrega instantània de dades amb `@st.cache_data`
 
 ## 🔧 Optimitzacions Tècniques
 
