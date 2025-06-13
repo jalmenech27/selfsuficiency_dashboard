@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Script per descarregar dades de FAOSTAT per al projecte d'Autosuficiència Alimentària
 Author: Jordi Almiñana Domènech (UOC Visualització de Dades)
