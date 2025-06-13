@@ -18,6 +18,8 @@ Aquest és un dashboard interactiu que analitza l'autosuficiència alimentària 
 - 💾 **Dades optimitzades** (18MB vs 2.5GB originals)
 - ⚡ **Carregada instantània** amb cache intel·ligent
 - 📱 **Responsive design** per tots els dispositius
+- 🔄 **Scripts automatitzats** per descàrrega i preprocessament de dades
+- 📋 **Pipeline complet** i reproducible de dades
 
 ![Dashboard Preview](https://img.shields.io/badge/Dashboard-Live%20on%20Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
 
@@ -85,23 +87,28 @@ selfsuficiency_dashboard/
 │   ├── loaders.py           # Funcions de càrrega de dades
 │   ├── indicators.py        # Càlculs d'indicadors
 │   └── plotting.py          # Funcions de visualització
+├── scripts/
+│   ├── data_download.py     # Script de descàrrega automàtica de dades
+│   └── preprocess_data.py   # Script de preprocessament de dades raw
 ├── data/                    # Dades preprocessades (CSV.gz)
-│   ├── ssr_women.csv.gz     # Autosuficiència + gènere
-│   ├── food_footprint.csv.gz
-│   ├── production.csv.gz
-│   ├── imports.csv.gz
-│   ├── exports.csv.gz
-│   └── *.csv.gz
+│   ├── ssr_women.csv.gz     # Autosuficiència + gènere (0.3 MB)
+│   ├── food_footprint.csv.gz # Petjada de carboni (0.3 MB)
+│   ├── production.csv.gz    # Producció (10.1 MB)
+│   ├── imports.csv.gz       # Importacions (4.0 MB)
+│   ├── exports.csv.gz       # Exportacions (3.4 MB)
+│   ├── area_map.csv.gz      # Mapa de països (0.0 MB)
+│   └── item_map.csv.gz      # Mapa de productes (0.0 MB)
 ├── requirements.txt
+├── .gitignore
 └── README.md
 ```
 
-## Pipeline de Dades
+## 🔄 Pipeline de Dades
 
 ### Descàrrega Automàtica
 ```bash
 # Descarregar totes les dades necessàries
-python data_download.py
+python scripts/data_download.py
 ```
 
 ### Preprocessament de Dades
@@ -194,7 +201,7 @@ No cal instal·lar res! Accedeix directament al dashboard a través del navegado
 ### Opció 1: Execució Directa
 ```bash
 # Clonar el repositori
-git clone https://github.com/username/selfsuficiency_dashboard.git
+git clone https://github.com/jalmenech27/selfsuficiency_dashboard.git
 cd selfsuficiency_dashboard
 
 # Instal·lar dependències
@@ -216,34 +223,36 @@ python scripts/preprocess_data.py
 streamlit run app.py
 ```
 
-### Dependències Principals
-```bash
+### ⚙️ Dependències Principals
+```txt
 streamlit>=1.30.0
 pandas>=2.0.0
 plotly>=5.17.0
 numpy>=1.24.0
 geopandas>=0.14.0  
 ```
+
 ---
 
 ## 📈 Estadístiques del Projecte
 
-- **🌍 Cobertura**: 245+ països i territoris
-- **📅 Temporal**: Dades des de 1961 fins 2023
-- **📊 Visualitzacions**: 15+ gràfics interactius
-- **💾 Optimització**: 18MB vs 2.5GB originals (99.2% reducció)
-- **⚡ Rendiment**: Cache multi-nivell per velocitat òptima
-## 🌐 Accés Online
+- **🌍 Cobertura Geogràfica**: 245+ països i territoris
+- **📅 Cobertura Temporal**: Dades des de 1961 fins 2023 (segons disponibilitat)
+- **📊 Visualitzacions**: 15+ gràfics interactius distribuïts en 7 seccions
+- **💾 Optimització de Dades**: 18.2MB vs 2.5GB originals (99.3% reducció)
+- **⚡ Rendiment**: Cache intel·ligent multi-nivell per velocitat òptima
+- **🔄 Pipeline Complet**: Scripts automatitzats per descàrrega i preprocessament
+- **📱 Compatibilitat**: Responsive design per mòbil, tablet i escriptori
+- **🚀 Desplegament**: Compatible amb Streamlit Cloud (fitxers <25MB)
 
 ## ✍️ Autoria
 
-**Jordi Almiñana Domènech** - @jalmenech27  
-Màster en Ciència de Dades (UOC) - Visualització de Dades  
-Curs 2024-2025
+**Jordi Almiñana Domènech** ([jalmenech27](https://github.com/jalmenech27))  
+📚 Màster en Ciència de Dades (UOC) - Visualització de Dades 2024-2025
 
 ## 📝 Llicència
 
-Creative Commons CC0 1.0 Universal - Lliure d'usos amb atribució voluntària
+[CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) - Domini públic, lliure d'usos
 
 ---
 
