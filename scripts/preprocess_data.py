@@ -1,3 +1,13 @@
+"""
+Script per preprocessar les dades de FAOSTAT descarregades per al projecte d'Autosuficiència Alimentària
+Author: Jordi Almiñana Domènech (UOC Visualització de Dades)
+Data: juny 2025
+
+Aquest script preprocessa automàticament les dades necessàries des de FAOSTAT
+i altres fonts de dades per al dashboard d'autosuficiència alimentària.
+L'objectiu és reduir els arxius del dataset original a arxius operatius pel projecte (<25MB).
+"""
+
 import pandas as pd
 import numpy as np
 
