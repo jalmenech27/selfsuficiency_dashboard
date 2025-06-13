@@ -1056,8 +1056,7 @@ def render_gender_section(data_dict, selected_year, selected_regions):
             Descobreix les diferències regionals en la participació femenina i com ha evolucionat al llarg del temps, 
             proporcionant una perspectiva de gènere essencial per entendre el sistema alimentari.
         </p>
-    </div>
-    """, unsafe_allow_html=True)
+    </div>    """, unsafe_allow_html=True)
     
     ssr_data = data_dict['ssr']
     
@@ -1082,24 +1081,57 @@ def render_gender_section(data_dict, selected_year, selected_regions):
                     nbins=20,
                     color_discrete_sequence=['#FF69B4']
                 )
+                
+                # Calcular estadístiques i afegir línies de referència
+                mean_gender = gender_year['WomenAgriShare'].mean()
+                median_gender = gender_year['WomenAgriShare'].median()
+                
+                # Afegir línies de mediana i mitjana
+                fig_gender_dist.add_vline(
+                    x=median_gender,
+                    line_dash="dash",
+                    line_color="red",
+                    annotation_text=f"Mediana: {median_gender:.1f}%",
+                    annotation_position="top left"
+                )
+                fig_gender_dist.add_vline(
+                    x=mean_gender,
+                    line_dash="dot",
+                    line_color="green",
+                    annotation_text=f"Mitjana: {mean_gender:.1f}%",
+                    annotation_position="top right"
+                )
+                
+                fig_gender_dist.update_layout(height=400, template='plotly_white')
                 st.plotly_chart(fig_gender_dist, use_container_width=True)
             
             with col2:
-                # Participació femenina per bloc regional
-                if 'BlocRegional' in gender_year.columns:
+                # Participació femenina per bloc regional                if 'BlocRegional' in gender_year.columns:
                     gender_by_bloc = gender_year.groupby('BlocRegional')['WomenAgriShare'].mean().sort_values(ascending=True)
                     
+                    # Crear DataFrame per facilitar la coloració per bloc
+                    gender_bloc_df = pd.DataFrame({
+                        'BlocRegional': gender_by_bloc.index,
+                        'ParticipacioFemenina': gender_by_bloc.values
+                    })
+                    
                     fig_gender_bloc = px.bar(
-                        x=gender_by_bloc.values,
-                        y=gender_by_bloc.index,
+                        gender_bloc_df,
+                        x='ParticipacioFemenina',
+                        y='BlocRegional',
                         orientation='h',
+                        color='BlocRegional',
                         title='Participació Femenina Mitjana per Bloc Regional',
-                        labels={'x': '% Dones en Agricultura', 'y': 'Bloc Regional'},
-                        color_discrete_sequence=['#FF69B4']
+                        labels={'ParticipacioFemenina': '% Dones en Agricultura', 'BlocRegional': 'Bloc Regional'},
+                        color_discrete_sequence=px.colors.qualitative.Set3
                     )
-                    fig_gender_bloc.update_layout(height=400)
+                    fig_gender_bloc.update_layout(
+                        height=400,
+                        showlegend=False  # Amagar la llegenda ja que és redundant amb l'eix Y
+                    )
                     st.plotly_chart(fig_gender_bloc, use_container_width=True)
-          # Evolució temporal de la participació femenina
+        
+        # Evolució temporal de la participació femenina
         st.subheader("Evolució de la Participació Femenina")
         
         if not gender_data.empty:
