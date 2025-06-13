@@ -8,6 +8,17 @@ env/
 venv/
 ENV/
 env.bak/
+
+# Dades raw (fitxers grans de FAOSTAT)
+data/raw/
+*.csv
+!data/*.csv.gz  # Mantenir les dades processades comprimides
+fao_*.csv
+Employment*.csv
+
+# Fitxers de descàrrega temporals
+*.zip
+*.tar.gz
 venv.bak/
 
 # Jupyter Notebook
