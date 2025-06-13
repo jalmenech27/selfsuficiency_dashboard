@@ -1,7 +1,7 @@
 """
 Script per descarregar dades de FAOSTAT per al projecte d'Autosuficiència Alimentària
-Author: UOC DataViz Project
-Date: 2025
+Author: Jordi Almiñana Domènech (UOC Visualització de Dades)
+Data: juny 2025
 
 Aquest script descarrega automàticament les dades necessàries des de FAOSTAT
 i altres fonts de dades per al dashboard d'autosuficiència alimentària.
